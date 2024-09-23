@@ -17,6 +17,6 @@ edit -- opens the editor (ex: fsutil edit path/to/file/ file-name.txt)
 install -- installs a framework (ex: fsutil install framework-name)
 add-pak -- adds a package the a project (ex: fsutil add-pak path/to/project/project-name package-name)**
 
-### Dependencies
+## Dependencies
 **1. Python 3\
 2. .NET**
