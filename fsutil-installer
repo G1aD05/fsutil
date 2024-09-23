@@ -1,0 +1,11 @@
+if which dotnet &> /dev/null; then
+    if which python3 &> /dev/null; then
+        curl -o /usr/local/bin/fsutil https://raw.githubusercontent.com/G1aD05/fsutil/refs/heads/main/src/fsutil
+        chmod +x /usr/local/bin/fsutil
+    else
+        echo "You do not have python3 installed download it here: https://www.python.org/downloads/"
+    fi
+else
+    echo "You do not have .NET installed download it here: https://dotnet.microsoft.com/en-us/download"
+fi
+
