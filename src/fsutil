@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+
+import tkinter as tk
+import os
+import sys
+
+root = tk.Tk()
+
+
+class Editor:
+    def __init__(self, file):
+        self.code = None
+        self.file_menu = None
+        self.file = file
+        root.title('Editor')
+        root.geometry('580x670')
+        root.resizable(False, False)
+        self.menu = tk.Menu(root)
+        self.widgets()
+
+    def save(self):
+        with open(os.path.join(os.getcwd(), self.file), 'w') as f:
+            num_lines = int(self.code.index('end-1c').split('.')[0])
+            text = ''
+            for line_number in range(1, num_lines + 1):
+                line_start = f"{line_number}.0"  # Start of the line
+                line_end = f"{line_number}.end"  # End of the line
+                line_content = self.code.get(line_start, line_end)
+                text = text + line_content + '\n'
+            f.write(text)
+
+    def widgets(self):
+        self.file_menu = tk.Menu(self.menu, tearoff=0)
+        self.file_menu.add_command(label="Save", command=self.save)
+        self.menu.add_cascade(label="File", menu=self.file_menu)
+        self.code = tk.Text(root, height=50, width=80)
+        self.code.insert(tk.END, open(os.path.join(os.getcwd(), self.file), 'r').read())
+        self.code.pack()
+        root.config(menu=self.menu)
+
+
+class Main:
+    def __init__(self):
+        self.argv = sys.argv
+
+    def main(self):
+        if self.argv[1] == 'new':
+            os.mkdir(self.argv[2])
+            os.chdir(os.path.join(os.getcwd(), self.argv[2]))
+            os.system(f'dotnet new {self.argv[3]} --language f# --force')
+            Editor('Program.fs')
+            root.mainloop()
+
+        elif self.argv[1] == 'run':
+            os.chdir(self.argv[2])
+            os.system('dotnet run')
+
+        elif self.argv[1] == 'edit':
+            os.chdir(self.argv[2])
+            Editor(self.argv[3])
+            root.mainloop()
+
+        elif self.argv[1] == 'install':
+            os.system(f'dotnet new install {self.argv[2]}')
+
+        elif self.argv[1] == 'add-pak':
+            os.chdir(self.argv[2])
+            os.system(f'dotnet add package {self.argv[3]}')
+
+        elif self.argv[1] == 'help':
+            print("""
+help -- shows this
+new -- creates a new project (ex: fsutil new project-name project-framework (for the project framework console is recommended for beginners)) 
+run -- runs a project (ex: fsutil run path/to/project/project-name)
+edit -- opens the editor (ex: fsutil edit path/to/file/ file-name.txt)
+install -- installs a framework (ex: fsutil install framework-name)
+add-pak -- adds a package the a project (ex: fsutil add-pak path/to/project/project-name package-name)
+            """)
+
+
+if __name__ == "__main__":
+    Main().main()
